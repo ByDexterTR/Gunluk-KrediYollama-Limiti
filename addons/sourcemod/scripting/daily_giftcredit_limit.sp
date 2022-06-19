@@ -17,6 +17,7 @@ ConVar g_limit = null;
 
 public void OnPluginStart()
 {
+	CreateDirectory("addons/sourcemod/logs/gunluk-kredi", 3);
 	LoadTranslations("common.phrases");
 	
 	AddCommandListener(CommandListener_Gift, "sm_hediye");
