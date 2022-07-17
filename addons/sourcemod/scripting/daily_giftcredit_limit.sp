@@ -27,12 +27,16 @@ public void OnPluginStart()
 	for (int i = 1; i <= MaxClients; i++)if (IsClientInGame(i) && !IsFakeClient(i))
 		OnClientPostAdminCheck(i);
 	
-	g_limit = CreateConVar("sm_dailycredit_limit", "250", "Günlük Kaç Kredi atılsın?", 0, true, 1.0, false);
+	g_limit = CreateConVar("sm_dailycredit_limit", "10000", "Günlük Kaç Kredi atılsın?", 0, true, 1.0, false);
 	AutoExecConfig(true, "Gunluk-KrediLimit", "ByDexter");
 }
 
 public void OnClientPostAdminCheck(int client)
 {
+	if (!DirExists("addons/sourcemod/logs/gunluk-kredi/"))
+	{
+		CreateDirectory("addons/sourcemod/logs/gunluk-kredi", 511);
+	}
 	char steamid[32], name[128], dosyayolu[256];
 	
 	FormatTime(dosyayolu, 256, "%F", GetTime());
@@ -137,11 +141,13 @@ public Action CommandListener_Gift(int client, const char[] command, int argc)
 		else if (Par == g_limit.IntValue)
 		{
 			PrintToChat(client, "[SM] Günlük kredi limitini aşamazsın. (!limit)");
+			delete kv;
 			return Plugin_Stop;
 		}
 		if (Kredi + Par > g_limit.IntValue)
 		{
 			PrintToChat(client, "[SM] Günlük kredi limitini aşamazsın. (!limit)");
+			delete kv;
 			return Plugin_Stop;
 		}
 		else
